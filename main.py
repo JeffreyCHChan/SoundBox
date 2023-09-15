@@ -1,31 +1,27 @@
-from playsound import playsound
 import os
 import RPi.GPIO as GPIO
 
-channels = [16, 18, 22, 32]
+channels = [8,10,16,18]
 files = os.listdir("Sounds")
 sounds = {}
-for count, channel in enumerate(channels.keys()):
-    sounds[channel] = files[count]
+print(files)
+for count, channel in enumerate(channels):
+    sounds[channel] = "Sounds/"+files[count]
+    
+print(sounds)
 
 # Define a callback function to be called when the button is pushed
-def button_callback(channel):
-    if channel == 16:
-        playsound(sounds[channel])
-    elif channel == 18:
-        playsound(sounds[channel])
-    elif channel == 22:
-        playsound(sounds[channel])
-    elif channel == 32:
-        playsound(sounds[channel])
+def button_callback(channel):    
+#     print("Channel "+ channel)
+    file = sounds[channel]
+    os.system("mpg123 "+file)
+
 
 # Ignore GPIO setup warnings
 GPIO.setwarnings(False)
 
 # Use physical pin numbering
 GPIO.setmode(GPIO.BOARD)
-
-# Set up input pins with pull-down resistors
 
 for channel in channels:
     GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -38,3 +34,4 @@ message = input("Press enter to quit\n\n")  # Run until someone presses enter
 
 # Clean up GPIO resources when done
 GPIO.cleanup()
+
